@@ -3,4 +3,4 @@ public class PalindromeCheckerApp {
     {
         System.out.println("Welcome to Palindrome Checker App")
     }
-}
+}git
