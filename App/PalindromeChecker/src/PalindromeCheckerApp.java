@@ -1,19 +1,16 @@
 import java.util.Scanner;
 import java.util.Stack;
-import java.util.Deque;
-import java.util.ArrayDeque;
 
-// Strategy Interface
-interface PalindromeStrategy {
-    boolean checkPalindrome(String input);
-}
+public class UseCase13PalindromeCheckerApp {
 
-// Stack based strategy
-class StackStrategy implements PalindromeStrategy {
+    // Algorithm 1: Reverse String Method
+    public static boolean reverseMethod(String input) {
+        String reversed = new StringBuilder(input).reverse().toString();
+        return input.equals(reversed);
+    }
 
-    public boolean checkPalindrome(String input) {
-
-        input = input.replaceAll("\\s+", "").toLowerCase();
+    // Algorithm 2: Stack Method
+    public static boolean stackMethod(String input) {
         Stack<Character> stack = new Stack<>();
 
         for (char c : input.toCharArray()) {
@@ -28,79 +25,60 @@ class StackStrategy implements PalindromeStrategy {
 
         return input.equals(reversed);
     }
-}
 
-// Deque based strategy
-class DequeStrategy implements PalindromeStrategy {
+    // Algorithm 3: Two Pointer Method
+    public static boolean twoPointerMethod(String input) {
 
-    public boolean checkPalindrome(String input) {
+        int left = 0;
+        int right = input.length() - 1;
 
-        input = input.replaceAll("\\s+", "").toLowerCase();
-        Deque<Character> deque = new ArrayDeque<>();
+        while (left < right) {
 
-        for (char c : input.toCharArray()) {
-            deque.addLast(c);
-        }
-
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
+            if (input.charAt(left) != input.charAt(right)) {
                 return false;
             }
+
+            left++;
+            right--;
         }
 
         return true;
     }
-}
-
-// Context class
-class PalindromeChecker {
-
-    private PalindromeStrategy strategy;
-
-    public PalindromeChecker(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean check(String input) {
-        return strategy.checkPalindrome(input);
-    }
-}
-
-// Main Application
-public class UseCase12PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Palindrome Checker App (Strategy Pattern) ===");
+        System.out.println("=== Palindrome Performance Comparison ===");
         System.out.print("Enter a string: ");
+
         String input = scanner.nextLine();
+        input = input.replaceAll("\\s+", "").toLowerCase();
 
-        System.out.println("\nChoose Algorithm:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
-        System.out.print("Enter choice: ");
+        // Reverse Method Timing
+        long start1 = System.nanoTime();
+        boolean result1 = reverseMethod(input);
+        long end1 = System.nanoTime();
 
-        int choice = scanner.nextInt();
+        // Stack Method Timing
+        long start2 = System.nanoTime();
+        boolean result2 = stackMethod(input);
+        long end2 = System.nanoTime();
 
-        PalindromeStrategy strategy;
+        // Two Pointer Method Timing
+        long start3 = System.nanoTime();
+        boolean result3 = twoPointerMethod(input);
+        long end3 = System.nanoTime();
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        System.out.println("\nResults:");
+        System.out.println("Reverse Method Result: " + result1);
+        System.out.println("Execution Time: " + (end1 - start1) + " ns");
 
-        PalindromeChecker checker = new PalindromeChecker(strategy);
+        System.out.println("\nStack Method Result: " + result2);
+        System.out.println("Execution Time: " + (end2 - start2) + " ns");
 
-        boolean result = checker.check(input);
-
-        if (result) {
-            System.out.println("The given string is a Palindrome.");
-        } else {
-            System.out.println("The given string is NOT a Palindrome.");
-        }
+        System.out.println("\nTwo Pointer Method Result: " + result3);
+        System.out.println("Execution Time: " + (end3 - start3) + " ns");
 
         scanner.close();
     }
